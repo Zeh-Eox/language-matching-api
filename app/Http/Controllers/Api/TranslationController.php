@@ -39,7 +39,7 @@ class TranslationController extends Controller
             return response()->json([
                 'status_code' => 200,
                 'status_message' => 'Translation successfully added',
-                'datas' => $translation
+                'data' => $translation
             ]);
         } catch (Exception $e)
         {
