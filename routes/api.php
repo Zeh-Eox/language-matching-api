@@ -18,14 +18,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('users/register', [UserController::class, "register"]);
 Route::post('users/login', [UserController::class, 'login']);
+Route::get('users', [UserController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function(): void
 {
-    Route::post('/translations', [TranslationController::class, 'store']);
+    Route::post('/translations/create', [TranslationController::class, 'store']);
     Route::get('/translations', [TranslationController::class, 'index']);
     Route::get(
-        '/translations/lang/{source_lang}/{target_lang}', 
+        '/translations/lang/{source_language}/{target_language}', 
         [TranslationController::class, 'getByLanguage']
+    );
+    Route::put(
+        '/translations/{translation}', 
+        [TranslationController::class, 'update']
+    );
+    Route::delete(
+        '/translations/{translation}', 
+        [TranslationController::class, 'destroy']
     );
 
     Route::get('/user', function(Request $request): mixed

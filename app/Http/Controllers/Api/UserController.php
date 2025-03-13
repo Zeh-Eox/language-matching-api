@@ -7,23 +7,18 @@ use App\Http\Requests\LogUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Collection
     {
-        //
+        return User::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function register(RegisterUserRequest $request): JsonResponse
     {
         try {
@@ -48,9 +43,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function login(LogUserRequest $request)
     {
         try {
@@ -78,21 +70,5 @@ class UserController extends Controller
         {
             return response()->json($e);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

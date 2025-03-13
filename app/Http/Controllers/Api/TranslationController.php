@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTranslationRequest;
+use App\Http\Requests\EditTranslationRequest;
 use App\Models\Translation;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -66,16 +67,61 @@ class TranslationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EditTranslationRequest $request, Translation $translation): JsonResponse
     {
-        //
+        try {
+            $translation->source_text = $request->source_text;
+            $translation->target_text = $request->target_text;
+
+            if($translation->user_id === auth()->user()->id)
+            {
+                $translation->save();
+            }else
+            {
+                return response()->json([
+                    'status_code' => 422,
+                    'status_message' => 'Must be the translation author to edit it',
+                    'data' => $translation
+                ]);
+            }
+
+            return response()->json([
+                'status_code' => 200,
+                'status_message' => 'Translation successfully edited',
+                'data' => $translation
+            ]);
+        } catch (Exception $e) 
+        {
+            return response()->json($e);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Translation $translation): JsonResponse
     {
-        //
+        try {
+            if($translation->user_id === auth()->user()->id)
+            {
+                $translation->delete();
+            } else 
+            {
+                return response()->json([
+                    'status_code' => 422,
+                    'status_message' => 'Must be the translation author to delete it',
+                    'data' => $translation
+                ]);
+            }
+
+            return response()->json([
+                'status_code' => 200,
+                'status_message' => 'Translation successfully deleted',
+                'data' => $translation
+            ]);
+        } catch(Exception $e)
+        {
+            return response()->json($e);
+        }
     }
 }
