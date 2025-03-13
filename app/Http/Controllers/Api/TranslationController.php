@@ -50,16 +50,20 @@ class TranslationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getByLanguage(Request $request): JsonResponse
+    public function getByLanguage(string $source_language, string $target_language): JsonResponse
     {
-        $validated = $request->validate([
-            'source_language' => 'required|string|size:2',
-            'target_language' => 'required|string|size:2',
-        ]);
+        // Validation des paramètres d'URL
+        if (!preg_match('/^[a-zA-Z]{2}$/', $source_language) || !preg_match('/^[a-zA-Z]{2}$/', $target_language)) {
+            return response()->json(['error' => 'Invalid language format'], 422);
+        }
 
-        $translations = Translation::where('source_language', $validated['source_language'])
-                                   ->where('target_language', $validated['target_language'])
+        $translations = Translation::where('source_language', $source_language)
+                                   ->where('target_language', $target_language)
                                    ->get();
+
+        if ($translations->isEmpty()) {
+            return response()->json(['message' => 'No translations found'], 404);
+        }
 
         return response()->json($translations);
     }
