@@ -18,10 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('users/register', [UserController::class, "register"]);
 Route::post('users/login', [UserController::class, 'login']);
-Route::get('users', [UserController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function(): void
 {
+    Route::get('users', [UserController::class, 'index']);
     Route::post('/translations/create', [TranslationController::class, 'store']);
     Route::get('/translations', [TranslationController::class, 'index']);
     Route::get(
