@@ -43,7 +43,7 @@ class UserController extends Controller
         }
     }
 
-    public function login(LogUserRequest $request)
+    public function login(LogUserRequest $request): JsonResponse
     {
         try {
             if (auth()->attempt($request->only(['email', 'password']))) 
