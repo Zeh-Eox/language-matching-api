@@ -17,7 +17,7 @@ class TranslationController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Translation::with('user')->get());
+        return response()->json(Translation::with('user')->get()->toArray());
     }
 
     /**
