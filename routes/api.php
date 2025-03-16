@@ -16,29 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('users/register', [UserController::class, "register"]);
+Route::post('users/register', [UserController::class, 'register']);
 Route::post('users/login', [UserController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function(): void
-{
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('users', [UserController::class, 'index']);
-    Route::post('/translations/create', [TranslationController::class, 'store']);
-    Route::get('/translations', [TranslationController::class, 'index']);
-    Route::get(
-        '/translations/lang/{source_language}/{target_language}', 
-        [TranslationController::class, 'getByLanguage']
-    );
-    Route::put(
-        '/translations/{translation}', 
-        [TranslationController::class, 'update']
-    );
-    Route::delete(
-        '/translations/{translation}', 
-        [TranslationController::class, 'destroy']
-    );
+    
+    Route::apiResource('translations', TranslationController::class);
+    Route::get('translations/lang/{source_language}/{target_language}', [TranslationController::class, 'getByLanguage']);
 
-    Route::get('/user', function(Request $request): mixed
-    {
+    Route::get('user', function (Request $request) {
         return $request->user();
     });
 });
