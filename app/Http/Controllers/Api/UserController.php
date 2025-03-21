@@ -7,16 +7,19 @@ use App\Http\Requests\LogUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index(): Collection
+    public function index(Request $request): JsonResponse
     {
-        return User::all();
+        $page = $request->query('page', 1);
+        $perPage = $request->query('limit', 5);
+        $users = User::paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json($users);
     }
 
     public function register(RegisterUserRequest $request): JsonResponse
@@ -50,7 +53,7 @@ class UserController extends Controller
             {
                 $user = auth()->user();
                 $_token = $user
-                            ->createToken('my_secret_token_only_visible_in_the_backend')
+                            ->createToken(env('JSON_WEB_TOKEN'))
                             ->plainTextToken;
                 
                 return response()->json([
