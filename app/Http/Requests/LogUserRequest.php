@@ -43,9 +43,7 @@ class LogUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'User Name is required',
             'email.required' => 'Email Adress is required',
-            'email.unique' => 'Email Adress is already used',
             'email.email' => 'Invalid Email Adress',
             'email.exists' => 'Adress Email does not exists',
             'password.required' => 'Password is required'
